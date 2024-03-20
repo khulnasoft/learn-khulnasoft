@@ -9,7 +9,7 @@ require (
 	github.com/kudobuilder/kuttl v0.0.0-00010101000000-000000000000
 	github.com/sirupsen/logrus v1.9.0
 	google.golang.org/grpc v1.56.3
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/protobuf v1.33.0
 	k8s.io/api v0.28.3
 	k8s.io/client-go v0.28.3
 	sigs.k8s.io/controller-runtime v0.16.3
