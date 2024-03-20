@@ -1,0 +1,64 @@
+name: Learn-KhulnaSoft
+on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
+  pull_request:
+    branches: 
+      - 'master'
+
+jobs:
+  docker:
+    name: Docker build and push
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master') && success()
+      uses: actions/checkout@master
+      with:
+        fetch-depth: 1
+    - name: Docker login
+      if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master') && success()
+      uses: azure/docker-login@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Docker build & push services
+      if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master') && success()
+      run: |
+        cd service && docker build --no-cache -t ${{ secrets.IMAGE_NAME }} .
+        docker tag ${{ secrets.IMAGE_NAME }}:latest ${{ secrets.IMAGE_NAME }}:${GITHUB_SHA::6}
+        docker push ${{ secrets.IMAGE_NAME }}:latest
+        docker push ${{ secrets.IMAGE_NAME }}:${GITHUB_SHA::6}
+        cd ../smi-conformance && docker build --no-cache -t ${{ secrets.IMAGE_NAME }}:smi .
+        docker tag ${{ secrets.IMAGE_NAME }}:smi ${{ secrets.IMAGE_NAME }}:smi-${GITHUB_SHA::6}
+        docker push ${{ secrets.IMAGE_NAME }}:smi
+        docker push ${{ secrets.IMAGE_NAME }}:smi-${GITHUB_SHA::6}
+    - name: Docker tag release & push
+      if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/') && success()
+      run: |
+        docker tag ${{ secrets.IMAGE_NAME }}:latest ${{ secrets.IMAGE_NAME }}:${GITHUB_REF/refs\/tags\//}
+        docker push ${{ secrets.IMAGE_NAME }}:${GITHUB_REF/refs\/tags\//}
+        docker tag ${{ secrets.IMAGE_NAME }}:smi ${{ secrets.IMAGE_NAME }}:smi-${GITHUB_REF/refs\/tags\//}
+        docker push ${{ secrets.IMAGE_NAME }}:smi-${GITHUB_REF/refs\/tags\//}
+  helm:
+    name: Helm charts publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.0.0
+        with:
+          version: ${GITHUB_REF/refs\/tags\//}
+          charts_repo_url: https://khulnasoft.github.io/master/charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

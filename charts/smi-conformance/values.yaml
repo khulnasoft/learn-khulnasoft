@@ -1,0 +1,20 @@
+namespace: meshplay
+serviceAccount: meshplay
+labels:
+  app: smi-conformance
+  release: smi-conformance
+image:
+  repository: khulnasoft/learn-khulnasoft
+  tag: smi
+  pullPolicy: Always
+  port: 10011
+resources:
+  limits:
+    cpu: "500m"
+    memory: 1000Mi
+  requests:
+    cpu: "200m"
+    memory: 500Mi
+service:
+  type: NodePort
+  port: 10011
