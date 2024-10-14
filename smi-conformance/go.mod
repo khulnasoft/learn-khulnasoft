@@ -3,27 +3,18 @@ module github.com/khulnasoft/learn-khulnasoft/smi-conformance
 go 1.13
 
 require (
-	cloud.google.com/go v0.46.3 // indirect
-	github.com/golang/protobuf v1.4.2
-	github.com/google/go-cmp v0.5.2 // indirect
+	github.com/golang/protobuf v1.5.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190118093823-f849b5445de4
 	github.com/khulnasoft/service-mesh-performance v0.0.0-20240115121425-f0a0a76e1ed5
-	github.com/kr/text v0.2.0 // indirect
 	github.com/kudobuilder/kuttl v0.0.0-00010101000000-000000000000
-	github.com/mattn/go-isatty v0.0.12 // indirect
-	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/onsi/ginkgo v1.14.1 // indirect
 	github.com/onsi/gomega v1.10.2 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.7.0
-	github.com/stretchr/testify v1.6.1 // indirect
 	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/grpc v1.30.0
-	google.golang.org/protobuf v1.24.0
-	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
-	k8s.io/api v0.17.3
-	k8s.io/client-go v0.17.3
+	google.golang.org/grpc v1.56.3
+	google.golang.org/protobuf v1.30.0
+	k8s.io/api v0.17.16
+	k8s.io/client-go v0.17.16
 	sigs.k8s.io/controller-runtime v0.5.1
 )
 
